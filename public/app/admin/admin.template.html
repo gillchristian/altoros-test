@@ -1,0 +1,120 @@
+<h2><em>Font Awesome Store</em> dashboard</h2>
+<br>
+<br>
+
+<div class="row">
+	<div class="col-md-6">
+		<table class="table table-hover">
+			<tr>
+					<th>Icono</th>
+					<th>Nombre</th>
+					<th>Descripcion</th>
+					<th>Precio</th>
+					<th>Stock</th>
+					<th></th>
+					<th></th>
+			</tr>
+			<tbody>
+				<tr ng-repeat="product in admin.products track by product.id">
+					<td><i class="fa fa-2x" ng-class="product.icon"></i></td>
+					<td>{{product.name}}</td>
+					<td>{{product.desc | limitTo : 15}}<span ng-show="product.desc.length > 15">...</span></td>
+					<td>{{product.price | currency}}</td>
+					<td>{{product.stock}}</td>
+					<td><button type="button" class="btn btn-warning" ng-click="admin.editProduct(product)">Editar</button></td>
+					<td><button type="button" class="btn btn-danger" ng-click="admin.removeProduct(product)">Eliminar</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-md-6">
+		<div class="jumbotron">
+			<form name="form" novalidate ng-submit="admin.saveProduct()">
+
+				<!-- icon -->
+				<div class="form-group row">
+					<div class="col-xs-6">
+						<label class="control-label" for="icon">Icono</label>
+						<select
+              class="form-control"
+              name="icon"
+              id="icon"
+              ng-model="admin.formProduct.icon"
+              ng-options="icon.name as icon.name for icon in admin.iconsList"
+              required></select>
+					</div>
+					<div class="col-xs-6">
+						<i ng-show="admin.formProduct.icon" class="img-thumbnail fa fa-5x" ng-class="admin.formProduct.icon"></i>
+					</div>
+				</div>
+				<!-- name -->
+				<div class="form-group has-feedback" ng-class="{'has-error': form.name.$invalid && form.name.$dirty, 'has-success': form.name.$valid}">
+					<label class="control-label" for="name">Nombre</label>
+					<input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            placeholder="Camara"
+            ng-model="admin.formProduct.name"
+            check-product-name
+            product-id="admin.formProduct.id"
+            required>
+          <span class="glyphicon glyphicon-remove form-control-feedback" ng-show='form.name.$error.productName'></span>
+          <span class="glyphicon glyphicon-refresh form-control-feedback" ng-show='form.name.$pending.productName'></span>
+          <span class="glyphicon glyphicon-ok form-control-feedback" ng-show='form.name.$valid'></span>
+				</div>
+				<!-- desc -->
+				<div class="form-group">
+					<label class="control-label" for="desc">Descripcion</label>
+					<textarea class="form-control" name="desc" id="desc" name="desc" placeholder="Nuevo icono de camaras" ng-model="admin.formProduct.desc" required></textarea>
+				</div>
+				<!-- price & stock -->
+				<div class="form-group row">
+					<div class="col-md-6">
+						<label class="control-label" for="price">Precio</label>
+						<input type="number" class="form-control" id="price" name="price" placeholder="50" min="0" ng-model="admin.formProduct.price" required>
+					</div>
+					<div class="col-md-6" ng-class="{'has-error': form.stock.$invalid && form.stock.$touched}">
+						<label class="control-label" for="stock">En stock</label>
+						<input
+              type="number"
+              class="form-control"
+              id="stock"
+              name="stock"
+              placeholder="15"
+              min="0"
+              range
+              r-min="10"
+              r-max="100"
+              ng-model="admin.formProduct.stock"
+              required>
+					</div>
+				</div>
+        <br>
+        <div class="alert alert-danger" ng-show="form.stock.$invalid && form.stock.$touched" role="alert">
+          <span>Stock entre 10 y 100!</span>
+        </div>
+        <br>
+				<!-- actions -->
+				<div class="pull-right">
+					<button type="submit" class="btn btn-primary" ng-show="admin.newProduct" ng-disabled="form.$invalid">Agregar</button>
+
+					<button type="button" class="btn btn-warning" ng-click="admin.cancelForm()" ng-hide="admin.newProduct">Cancelar</button>
+					<button type="submit" class="btn btn-primary" ng-hide="admin.newProduct" ng-disabled="form.$invalid">Guardar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+<div class="action--feedback-container" ng-show="admin.errorMessage || admin.successMessage">
+  <div class="alert alert-error" ng-show="admin.errorMessage" role="alert">
+    <p>{{admin.errorMessage}}</p>
+  </div>
+
+  <div class="alert alert-success" ng-show="admin.successMessage" role="alert">
+    <p>{{admin.successMessage}}</p>
+  </div>
+</div>
