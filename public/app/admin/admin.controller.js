@@ -75,7 +75,10 @@
 					icon: vm.iconsList[0].name
 				};
 				vm.newProduct = true;
+        // --- set the form state back to pristine/untouched
+        // --- after cancel/submit
         $scope.form.$setPristine();
+        $scope.form.$setUntouched();
         removeMessages();
 			}
 
@@ -108,7 +111,10 @@
 					icon: vm.iconsList[0].name
 				};
 				vm.newProduct = true;
+        // --- set the form state back to pristine/untouched
+        // --- after cancel/submit
         $scope.form.$setPristine();
+        $scope.form.$setUntouched();
       }
 			/**
 			 * Initializes the controller state

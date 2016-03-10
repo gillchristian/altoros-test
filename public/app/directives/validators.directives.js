@@ -19,10 +19,11 @@
         link: function postLink(scope, elm, attrs, ctrl) {
 
           ctrl.$validators.range = function(modelValue, viewValue) {
-            if (ctrl.$isEmpty(modelValue)) return true;
-            var min = scope.rMin > parseInt(viewValue);
-            var max = scope.rMax < parseInt(viewValue);
-            return min || max ? false : true;
+            var value = modelValue || viewValue;
+            if (ctrl.$isEmpty(value)) return true;
+            var min = scope.rMin > parseInt(value);
+            var max = scope.rMax < parseInt(value);
+            return !(min || max);
           };
         }
       };
