@@ -2,10 +2,10 @@
 
 let config = {
   db: {
-    host: process.env.host || 'localhost',
-    user: process.env.user || 'root',
-    password: process.env.password || null,
-    database: process.env.db || 'font-awesome-store'
+    host: process.env.host || 'fontawesomestore.db.11105068.hostedresource.com',
+    user: process.env.user || 'fontawesomestore',
+    password: process.env.password || 'asdQWE!@#123',
+    database: process.env.db || 'fontawesomestore'
   },
   port: process.env.PORT || 3000,
   secret: 'nodeRocks'

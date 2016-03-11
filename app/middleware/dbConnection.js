@@ -4,9 +4,10 @@ let config  = require('./../config');
 
 module.exports = function(){
 	// conect to the database --------------------------------------------------
-	let dbConnection = mysql.createConnection(config.db);
+  var poolConfig = config.db;
+  poolConfig.connectionLimit = 10;
 
-	dbConnection.connect();
+	let pool = mysql.createPool(poolConfig);
 
-  return dbConnection;
+  return pool;
 }
