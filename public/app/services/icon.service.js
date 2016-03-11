@@ -5,10 +5,10 @@
 	.module('ecommerceApp.services')
 	.factory('iconService', iconService);
 
-	iconService.$inject = ['$http'];
+	iconService.$inject = ['$http', '$window'];
 
 
-	function iconService($http) {
+	function iconService($http, $window) {
 
     return { getIcons: getIcons };
 

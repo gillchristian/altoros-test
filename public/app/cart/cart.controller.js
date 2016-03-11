@@ -8,9 +8,9 @@
 	.controller('CartController', CartController)
 	.controller('CartModalController', CartModalController);
 
-	CartController.$inject = ['productService', 'cartService', '$uibModal'];
+	CartController.$inject = ['productService', 'cartService', '$uibModal', 'Auth'];
 
-	function CartController(productService, cartService, $uibModal) {
+	function CartController(productService, cartService, $uibModal, Auth) {
     // --- view-model ---
     var vm = this;
 
@@ -19,10 +19,18 @@
 		// --- controller public functions ---
 		vm.addToCart 	= addToCart;
     vm.openModal  = openModal;
+    vm.login      = login;
 
 		activate();
 
 		////////////////
+
+    /**
+     * Login as admin
+     */
+    function login(){
+      Auth.login();
+    }
 
 		/**
 		 * Adds a product to the cart

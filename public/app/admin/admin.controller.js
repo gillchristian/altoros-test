@@ -7,9 +7,9 @@
 	.controller('AdminController',AdminController);
 
 		AdminController.$inject  = ['$scope', '$timeout',
-    'iconService', 'productService'];
+    'iconService', 'productService', 'Auth'];
 
-		function AdminController($scope, $timeout, iconService, productService){
+		function AdminController($scope, $timeout, iconService, productService, Auth){
 			// --- view-model ---
 			var vm = this;
 
@@ -18,10 +18,18 @@
 			vm.saveProduct 		= saveProduct;
 			vm.removeProduct 	= removeProduct;
 			vm.cancelForm     = cancelForm;
+			vm.logout         = logout;
 
 			activate();
 
 			//////////////////////////////////////////
+
+      /**
+       * Login as admin
+       */
+      function logout(){
+        Auth.logout();
+      }
 
 			/**
 			 * Edit a product
