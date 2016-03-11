@@ -32,7 +32,6 @@
         }
       })
       .then(function(response) {
-        console.log(response.data.token);
         AuthToken.setToken(response.data.token);
       })
     }
@@ -43,7 +42,6 @@
     function logout() {
       // clear the token
       AuthToken.setToken();
-      console.log( AuthToken.getToken() )
     }
 
   }

@@ -24,7 +24,6 @@ function iconsRoutes(express, dbConnection){
 
       dbConnection.query( queryString, table,(err, rows, fields)=>{
         if (err) throw err;
-        console.log(rows.length + ' -> icons retrived');
         res.json(rows);
       });
     });
