@@ -1,10 +1,10 @@
 'use strict';
-var	mysql	  = require('mysql');
-var config  = require('./../config');
+let	mysql	  = require('mysql');
+let config  = require('./../config');
 
 module.exports = function(){
 	// conect to the database --------------------------------------------------
-	var dbConnection = mysql.createConnection(config.db);
+	let dbConnection = mysql.createConnection(config.db);
 
 	dbConnection.connect();
 

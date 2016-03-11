@@ -1,40 +1,31 @@
 'use strict';
-var mysql = require('mysql');
-module.exports = function(app, express, dbConnection){
+let mysql = require('mysql');
 
-	// get an instance of the Express Router ------------------------------
-	var router = express.Router();
+module.exports = productsRoutes;
 
-	var table = 'products';
+function productsRoutes(express, dbConnection){
 
+	// get an instance of the Express Router ------------------------------------
+	let router = express.Router();
+	let table = 'products';
+  let tokenVerify = require('./../middleware/tokenVerify');
 
+  // ROUTES -------------------------------------------------------------------
 	router.route('/')
-
-		// get all the products -------------------------------------------
+		// get all the products ---------------------------------------------------
 		.get( (req, res)=>{
 
-            let queryString = 'SELECT * from ??';
+      let queryString = 'SELECT * from ??';
 
 			dbConnection.query( queryString, table,(err, rows, fields)=>{
 				if (err) throw err;
-				console.log(rows.length + ' -> products retrived');
 				res.json(rows);
-
 			});
 		})
-
-		// add a single product -------------------------------------------
+		// add a single product ---------------------------------------------------
 		.post( (req, res)=>{
 
-			let columns = [
-        'name',
-        'desc',
-        'price',
-        'stock',
-        'icon'
-      ];
-
-      // TODO: used body!!!
+			let columns = ['name', 'desc', 'price', 'stock', 'icon'];
 			let product = [
         req.body.name,
         req.body.desc,
@@ -42,7 +33,6 @@ module.exports = function(app, express, dbConnection){
         req.body.stock,
         req.body.icon
       ];
-
       let queryString = 'INSERT into ?? (??) VALUES (?)';
 
 			dbConnection.query(queryString, [table, columns, product],(err)=>{
@@ -51,41 +41,29 @@ module.exports = function(app, express, dbConnection){
 				}
 				else {
 					res.send('product Created!!!');
-					console.log('product saved!');
 				}
 			});
-
 		});
 
-	// --- ROUTES ---------------------------
+	// --- ROUTES ---------------------------------------------------------------
 	router.route('/:_id')
-
-		// get an user by its id ------------------------------------------
+		// get an user by its id --------------------------------------------------
 		.get( (req, res)=>{
 
-			let queriedProduct = {
-				id: req.params._id
-			};
-
+			let queriedProduct = { id: req.params._id };
       let queryString = 'SELECT * from ?? WHERE ?';
 
 			dbConnection.query(queryString, [table, queriedProduct], (err, row, fields)=>{
 				if (err) throw err;
-
-				console.log(row);
 				res.json(row);
 			});
 		})
-
-		// update an user -------------------------------------------------
+		// update an user ---------------------------------------------------------
 		.put( (req, res)=>{
 
-			let queriedProduct = {
-				id: req.params._id
-			};
-
+			let queriedProduct = { id: req.params._id };
 			let product = [ ];
-      // TODO: used body!!!
+
       if (req.body.name) product.push({name: req.body.name});
       if (req.body.desc) product.push({desc: req.body.desc});
       if (req.body.price) product.push({price: req.body.price});
@@ -101,14 +79,18 @@ module.exports = function(app, express, dbConnection){
 					res.send(err);
 					throw err;
 				}
-				else {
+				else
 					res.send('product Updated!!!');
-					console.log('product updated!');
-				}
 			});
-		})
+		});
 
-		// remove a user --------------------------------------------------
+  // --- token virification middalware used from here -------------------------
+  // --- following on this router requests ------------------------------------
+  // --- are required to provide a token --------------------------------------
+  router.use( tokenVerify );
+
+	router.route('/:_id')
+		// remove a user ----------------------------------------------------------
 		.delete( (req, res)=>{
 
 			let queriedProduct = {
@@ -122,20 +104,16 @@ module.exports = function(app, express, dbConnection){
 					res.send(err);
 					throw err;
 				}
-				else {
+				else
 					res.send('product Deleted!!!');
-					console.log('product deleted!');
-				}
 			});
 		});
 
 	router.route('/check')
-
-		// get all the products -------------------------------------------
+		// check if a product name is available -----------------------------------
 		.post( (req, res)=>{
       let name = {name: req.body.name}
       let id = req.body.id || '';
-
       let queryString = 'SELECT * from ?? WHERE ?';
 
       dbConnection.query(queryString, [table, name], (err, rows, fields)=>{
@@ -144,14 +122,12 @@ module.exports = function(app, express, dbConnection){
           throw err;
         }
         else {
-          console.log(rows);
-          var available = !rows.length;
-          if (rows.length)
-            available = rows[0].id == id;
+          let available = !rows.length;
+          if (rows.length) available = rows[0].id == id;
           res.send({available: available})
         }
       })
-    })
+    });
 
 	return router;
 };
