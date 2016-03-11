@@ -32,7 +32,8 @@
   "scripts": {
     "test-public": "karma start --single-run",
     "test-api": "mocha ./tests/api/*.spec.js",
-    "test": "npm run test-public & npm run test-api"
+    "test": "npm run test-public & npm run test-api",
+    "staer": "node index"
   },
   "repository": {
     "type": "git",
