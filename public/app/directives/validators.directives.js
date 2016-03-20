@@ -42,20 +42,12 @@
       link: function postLink(scope, elm, attrs, ctrl) {
         ctrl.$asyncValidators.checkProductName = function(modelValue, viewValue) {
 
-          var deferred = $q.defer();
           var name = modelValue || viewValue;
           if ( ctrl.$isEmpty(name) ) {
             // consider empty model valid
-            deferred.resolve()
+            return $q.when()
           }
-          productService.checkName(name, scope.productId)
-            .then(
-              // --- set validity by resolving or rejecting,
-              // --- respectively, the promise
-              function(){ deferred.resolve() },
-              function (){ deferred.reject() }
-            )
-          return deferred.promise;
+          return productService.isUniqueName(name, scope.productId)
         }
       }
     }

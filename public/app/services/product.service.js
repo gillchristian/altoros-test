@@ -14,7 +14,7 @@
       add: add,
       update: update,
       remove: remove,
-      checkName: checkName,
+      isUniqueName: isUniqueName,
     }
 
 		/////////////////////////
@@ -27,13 +27,13 @@
       return $http({
         method: 'GET',
         url: '/api/products'
-      }).then(
-        function(response){
-          return response.data
-        },
-        function(error){
-          return error
-        });
+      })
+      .then(function(response){
+        return response.data
+      })
+      .catch(function(error){
+        return error
+      });
     };
 
 		/**
@@ -47,13 +47,13 @@
         method: 'POST',
         url: '/api/products',
         data: product,
-      }).then(
-        function(response){
-          return response.data
-        },
-        function(error){
-          return error
-        });
+      })
+      .then(function(response){
+        return response.data
+      })
+      .catch(function(error){
+        return error
+      });
 		}
 
 		/**
@@ -68,13 +68,12 @@
         url: '/api/products/' + product.id,
         data: product,
       })
-      .then(
-        function(response){
-          return response.data
-        },
-        function(error){
-          return error
-        });
+      .then(function(response){
+        return response.data
+      })
+      .catch(function(error){
+        return error
+      });
 		}
 
 		/**
@@ -87,13 +86,13 @@
       return $http({
         method: 'DELETE',
         url: '/api/products/' + id
-      }).then(
-        function(response){
-          return response.data
-        },
-        function(error){
-          return error
-        });
+      })
+      .then(function(response){
+        return response.data
+      })
+      .catch(function(error){
+        return error
+      });
 		}
 
     /**
@@ -102,20 +101,16 @@
      * @param {string}  name
      * @returns {object}  promise
      */
-    function checkName(name, id) {
-      var deferred = $q.defer();
-      $http({
+    function isUniqueName(name, id) {
+      return $http({
         method: 'POST',
         url: '/api/products/check',
         data: {name: name, id: id}
-      }).then(
-        function(response){
-          if (response.data.available) deferred.resolve()
-          else deferred.reject()
-        }, function (error) {
-          deferred.reject()
-        });
-      return deferred.promise
+      })
+      .then(function(response){
+        if (response.data.available) return;
+        else return $q.reject()
+      });
     }
 	}
 })();

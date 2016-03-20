@@ -13,6 +13,12 @@
 	function CartController(productService, cartService, $uibModal, Auth) {
     // --- view-model ---
     var vm = this;
+    vm.showCart     = false;
+    vm.checkedout   = false;
+    vm.errorMessage = null;
+    vm.cart         = [];
+    vm.products     = [];
+
 
 		vm.cartService = cartService;
 
@@ -59,11 +65,11 @@
 		 */
 		function checkout(){
       // --- update all the products ---
-      angular.forEach(vm.cart, function(val, i){
-        var index = vm.products.findIndex(function(product){
+      vm.cart.forEach(function(val, i){
+        var productToUpdate = vm.products.find(function(product){
           return product.id === val.id
         });
-        productService.update( vm.products[index] );
+        productService.update( productToUpdate );
       });
       // --- checkout the cart ---
 		}
@@ -76,7 +82,8 @@
 			productService.getAll()
         .then(function(products){
           vm.products = products;
-        }, function(message){
+        })
+        .catch(function(message){
           vm.errorMessage = message;
         });
 		}
@@ -85,16 +92,15 @@
 		 * Initializes controller state
 		 */
 		function activate() {
-			vm.showCart 	= false;
-			vm.checkedout = false;
-			vm.cart 			= cartService.getCart();
+			vm.cart = cartService.getCart();
 
       // --- get the products ---
 			productService.getAll()
         .then(function(products){
           vm.products = products;
           updateByCart();
-        }, function(message){
+        })
+        .catch(function(message){
           vm.errorMessage = message;
         });
 		}
@@ -104,7 +110,7 @@
      */
     function updateByCart(){
       if (vm.cart.length){
-        angular.forEach(vm.cart, function(val){
+        vm.cart.forEach(function(val){
           var index = vm.products.findIndex(function(product){
             return product.id === val.id
           })
@@ -138,12 +144,8 @@
         .then(function (checkedout) {
           // --- resolve ---
           // --- either checked out or emptied the cart ---
-          if(checkedout){
-            checkout();
-          }
-          else {
-            emptyCart();
-          }
+          if(checkedout) checkout();
+          else emptyCart();
         });
     }
 

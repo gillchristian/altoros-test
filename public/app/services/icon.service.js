@@ -24,9 +24,10 @@
 				url: '/api/icons'
 			})
       .then(function(response){
-        return response.data;
-      },function(error){
-        return error;
+        return response.data
+      })
+      .catch(function(error){
+        return error
       });
 		}
 	}

@@ -12,6 +12,12 @@
 		function AdminController($scope, $timeout, iconService, productService, Auth){
 			// --- view-model ---
 			var vm = this;
+      vm.newProduct     = true;
+      vm.errorMessage   = null;
+      vm.successMessage = null;
+      vm.formProduct    = {};
+      vm.iconsList      = [];
+      vm.products       = [];
 
 			// --- controller public functions ---
 			vm.editProduct 		= editProduct;
@@ -63,9 +69,10 @@
             .then(function(message){
               vm.successMessage = message;
               getAllProducts();
-            },function (message) {
-              getAllProducts();
+            })
+            .catch(function (message) {
               vm.errorMessage = message;
+              getAllProducts();
             });
         }
         else {
@@ -73,7 +80,8 @@
             .then(function(message){
               vm.successMessage = message;
               getAllProducts();
-            },function (message) {
+            })
+            .catch(function (message) {
               getAllProducts();
               vm.errorMessage = message;
             });
@@ -104,7 +112,8 @@
           .then(function(message){
             vm.successMessage = message;
             getAllProducts();
-          },function(message){
+          })
+          .catch(function(message){
             vm.errorMessage = message;
             getAllProducts();
           });
@@ -128,17 +137,11 @@
 			 * Initializes the controller state
 			 */
 			function activate(){
-				vm.newProduct = true;
-
-				vm.formProduct = {}
-				vm.iconsList = []
-
 				iconService.getIcons()
           .then(function(icons){
             vm.iconsList = icons;
             vm.formProduct.icon = vm.iconsList[0].name;
           });
-
         getAllProducts();
 			}
 
@@ -149,7 +152,8 @@
         productService.getAll()
           .then(function(products){
             vm.products = products;
-          }, function(message){
+          })
+          .catch(function(message){
             vm.errorMessage = message;
           });
       }
